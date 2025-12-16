@@ -163,9 +163,6 @@ Status LocalFile::Mkdir() const {
             dir.resize(len - 1);
         }
     }
-    if (access(dir.c_str(), F_OK) == 0) {
-        return Status::Exist(fmt::format("directory '{}' already exist", dir));
-    }
     size_t pos = dir.rfind('/');
     if (pos == std::string::npos) {
         if (mkdir(dir.c_str(), 0755) < 0) {
@@ -180,9 +177,11 @@ Status LocalFile::Mkdir() const {
         PAIMON_RETURN_NOT_OK(MkNestDir(parent_dir));
     }
     if (mkdir(dir.c_str(), 0755) < 0) {
-        int32_t cur_errno = errno;
-        return Status::IOError(
-            fmt::format("create directory '{}' failed, ec: {}", dir, std::strerror(cur_errno)));
+        if (errno != EEXIST) {
+            int32_t cur_errno = errno;
+            return Status::IOError(
+                fmt::format("create directory '{}' failed, ec: {}", dir, std::strerror(cur_errno)));
+        }
     }
     return Status::OK();
 }
