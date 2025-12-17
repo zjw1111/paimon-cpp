@@ -1014,7 +1014,7 @@ TEST_P(FileSystemTest, TestMkdir2) {
 }
 
 // test for create multi dir such as "/table/partition1/bucket1" and "/table/partition1/bucket2"
-TEST_P(FileSystemTest, TestMkdirMultiThread) {
+TEST_P(FileSystemTest, TestMkdirMultiThreadWithSameNonExistParentDir) {
     uint32_t runs_count = 10;
     uint32_t thread_count = 10;
     auto executor = CreateDefaultExecutor(thread_count);
@@ -1039,7 +1039,7 @@ TEST_P(FileSystemTest, TestMkdirMultiThread) {
 }
 
 // test for create multi dir such as "/table/partition1" and "/table/partition1"
-TEST_P(FileSystemTest, TestMkdirMultiThread2) {
+TEST_P(FileSystemTest, TestMkdirMultiThreadWithSameName) {
     uint32_t runs_count = 10;
     uint32_t thread_count = 10;
     auto executor = CreateDefaultExecutor(thread_count);
@@ -1061,7 +1061,7 @@ TEST_P(FileSystemTest, TestMkdirMultiThread2) {
 }
 
 // test for create multi dir such as "partition1" and "partition1" (relative path)
-TEST_P(FileSystemTest, TestMkdirMultiThread3) {
+TEST_P(FileSystemTest, TestMkdirMultiThreadWithSameNameWithRelativePath) {
     uint32_t runs_count = 10;
     uint32_t thread_count = 10;
     auto executor = CreateDefaultExecutor(thread_count);
