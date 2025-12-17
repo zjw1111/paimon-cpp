@@ -123,36 +123,9 @@ Status LocalFile::Delete() const {
     return Status::OK();
 }
 
-Result<bool> LocalFile::MkNestDir(const std::string& dir_name) const {
-    CHECK_HOOK();
-    size_t pos = dir_name.rfind('/');
-    if (pos == std::string::npos) {
-        return mkdir(dir_name.c_str(), 0755) == 0;
-    }
-
-    std::string parent_dir = dir_name.substr(0, pos);
-    if (!parent_dir.empty() && access(parent_dir.c_str(), F_OK) != 0) {
-        PAIMON_ASSIGN_OR_RAISE(bool success, MkNestDir(parent_dir));
-        if (!success) {
-            return false;
-        }
-    }
-    return mkdir(dir_name.c_str(), 0755) == 0;
-}
-
 Result<bool> LocalFile::Mkdir() const {
     CHECK_HOOK();
-    std::string dir = path_;
-    size_t len = dir.size();
-    if (dir[len - 1] == '/') {
-        if (len == 1) {
-            return false;
-        } else {
-            dir.resize(len - 1);
-        }
-    }
-    PAIMON_ASSIGN_OR_RAISE(bool success, MkNestDir(dir));
-    return success;
+    return mkdir(path_.c_str(), 0755) == 0;
 }
 
 Result<std::unique_ptr<LocalFileStatus>> LocalFile::GetFileStatus() const {

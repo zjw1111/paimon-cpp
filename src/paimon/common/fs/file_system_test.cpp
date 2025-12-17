@@ -979,18 +979,14 @@ TEST_P(FileSystemTest, TestMkdirsFailsWithExistingParentFile) {
 }
 
 TEST_P(FileSystemTest, TestMkdir) {
-    {
-        std::string path = PathUtil::JoinPath(test_root_, "/tmp.txt/tmpB");
-        ASSERT_OK(fs_->Mkdirs(path));
-    }
-    {
-        std::string path = PathUtil::JoinPath(test_root_, "/tmpA/tmpB/");
-        ASSERT_OK(fs_->Mkdirs(path));
-    }
-    {
-        std::string path = "/";
-        ASSERT_OK(fs_->Mkdirs(path));
-    }
+    ASSERT_OK(fs_->Mkdirs(test_root_ + "/tmp.txt/tmpB"));
+    ASSERT_OK(fs_->Mkdirs(test_root_ + "/tmpA/tmpB/"));
+
+    ASSERT_OK(fs_->Mkdirs(test_root_ + "/tmp/local/f/1"));
+    ASSERT_OK(fs_->Mkdirs(test_root_ + "/tmp1"));
+    ASSERT_OK(fs_->Mkdirs(test_root_ + "/tmp1/f2/"));
+    ASSERT_OK(fs_->Mkdirs("/"));
+    ASSERT_NOK_WITH_MSG(fs_->Mkdirs(""), "path is an empty string.");
 }
 
 TEST_P(FileSystemTest, TestMkdir2) {

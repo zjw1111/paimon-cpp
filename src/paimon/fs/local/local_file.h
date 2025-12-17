@@ -68,8 +68,6 @@ class LocalFile {
     }
 
  private:
-    Result<bool> MkNestDir(const std::string& dir_name) const;
-
     const std::string path_;
     FILE* file_ = nullptr;
     IOHook* hook_;
