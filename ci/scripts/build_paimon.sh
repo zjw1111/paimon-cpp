@@ -16,7 +16,7 @@
 
 set -eux
 
-sudo snap install protobuf
+sudo snap install protobuf --classic
 
 source_dir=${1}
 enable_sanitizer=${2:-false}
