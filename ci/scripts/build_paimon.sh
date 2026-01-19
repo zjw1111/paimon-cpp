@@ -16,6 +16,8 @@
 
 set -eux
 
+sudo apt install protobuf -y
+
 source_dir=${1}
 enable_sanitizer=${2:-false}
 check_clang_tidy=${3:-false}
