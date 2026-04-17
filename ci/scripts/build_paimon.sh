@@ -22,6 +22,9 @@ check_clang_tidy=${3:-false}
 build_type=${4:-Debug}
 build_dir=${1}/build
 
+which clang++
+clang++ --version
+which clang-tidy
 clang-tidy --version
 
 # Display ccache status if available
