@@ -22,6 +22,8 @@ check_clang_tidy=${3:-false}
 build_type=${4:-Debug}
 build_dir=${1}/build
 
+clang-tidy --version
+
 # Display ccache status if available
 if command -v ccache &> /dev/null; then
     echo "=== ccache found: $(ccache --version | head -1) ==="
