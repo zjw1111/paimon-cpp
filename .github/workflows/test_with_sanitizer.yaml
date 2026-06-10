@@ -41,6 +41,7 @@ jobs:
         with:
           lfs: true
       - name: Setup ccache
+        id: setup-ccache
         uses: ./.github/actions/setup-ccache
         with:
           cache-key-prefix: ccache-sanitizer
@@ -50,6 +51,12 @@ jobs:
           CC: clang
           CXX: clang++
         run: ci/scripts/build_paimon.sh $(pwd) true
+      - name: Save ccache
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.ccache
+          key: ${{ steps.setup-ccache.outputs.cache-key }}
       - name: Show ccache statistics
         if: always()
         run: ccache -s

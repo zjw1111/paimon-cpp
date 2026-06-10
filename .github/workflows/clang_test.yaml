@@ -42,6 +42,7 @@ jobs:
           lfs: true
           fetch-depth: 0  # fetch all history for git diff in clang-tidy
       - name: Setup ccache
+        id: setup-ccache
         uses: ./.github/actions/setup-ccache
         with:
           cache-key-prefix: ccache-clang-test
@@ -51,6 +52,12 @@ jobs:
           CC: clang
           CXX: clang++
         run: ci/scripts/build_paimon.sh $(pwd) false true
+      - name: Save ccache
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.ccache
+          key: ${{ steps.setup-ccache.outputs.cache-key }}
       - name: Show ccache statistics
         if: always()
         run: ccache -s

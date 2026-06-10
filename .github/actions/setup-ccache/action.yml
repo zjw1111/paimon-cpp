@@ -20,6 +20,11 @@ inputs:
     description: Prefix for the cache key (e.g., ccache-gcc-test)
     required: true
 
+outputs:
+  cache-key:
+    description: The full cache key used for save
+    value: ${{ steps.cache-key.outputs.key }}
+
 runs:
   using: composite
   steps:
@@ -27,13 +32,19 @@ runs:
       shell: bash
       run: sudo apt-get update && sudo apt-get install -y ccache
 
+    - name: Compute cache key
+      id: cache-key
+      shell: bash
+      run: echo "key=${{ inputs.cache-key-prefix }}-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake') }}" >> "$GITHUB_OUTPUT"
+
     - name: Restore ccache
-      uses: actions/cache@v4
+      uses: actions/cache/restore@v4
       with:
         path: ~/.ccache
-        key: ${{ inputs.cache-key-prefix }}-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake') }}
+        key: ${{ steps.cache-key.outputs.key }}
         restore-keys: |
           ${{ inputs.cache-key-prefix }}-${{ runner.os }}-${{ github.ref_name }}-
+          ${{ inputs.cache-key-prefix }}-${{ runner.os }}-main-
           ${{ inputs.cache-key-prefix }}-${{ runner.os }}-
 
     - name: Configure ccache
